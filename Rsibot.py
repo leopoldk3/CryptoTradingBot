@@ -3,7 +3,9 @@ import config
 from binance.client import Client
 from binance.enums import *
 
-SOCKET = "wss://stream.binance.com:9443/ws/ethusdt@kline_1m"
+# candle sticks are every 15 min because at the end of the stream it is @kline_15m can change if wanted
+
+SOCKET = "wss://stream.binance.com:9443/ws/ethusdt@kline_15m"
 
 RSI_PERIOD = 14
 RSI_OVERBOUGHT = 70
@@ -37,9 +39,9 @@ def on_close(ws):
 def on_message(ws, message):
     global closes, in_position
     
-    print('received message')
+    # print('received message')
     json_message = json.loads(message)
-    pprint.pprint(json_message)
+    # pprint.pprint(json_message)
 
     candle = json_message['k']
 
