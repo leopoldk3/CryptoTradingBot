@@ -25,15 +25,16 @@ class RSI_Strategy:
         if len(closes) > self.RSI_PERIOD:
                 np_closes = numpy.array(closes)
                 rsi = talib.RSI(np_closes, self.RSI_PERIOD)
-                print("all rsis calculated so far")
-                print(rsi)
                 last_rsi = rsi[-1]
-                print("the current rsi is {}".format(last_rsi))
+                # if last_rsi != rsi[-2]:
+                #     print("all rsis calculated so far")
+                #     print(rsi)
+                #     print("the current rsi is {}".format(last_rsi))
 
                 if last_rsi > self.RSI_OVERBOUGHT:
                     if in_position:
                         print("Overbought! Sell! Sell! Sell!")
-                        # put binance sell logic here
+                        # put binance SELL logic here
                         order_succeeded = order(SIDE_SELL, TRADE_QUANTITY, TRADE_SYMBOL)
                         if order_succeeded:
                             in_position = False
@@ -45,10 +46,62 @@ class RSI_Strategy:
                         print("It is oversold, but you already own it, nothing to do.")
                     else:
                         print("Oversold! Buy! Buy! Buy!")
-                        # put binance buy order logic here
+                        # put binance BUY order logic here
                         order_succeeded = order(SIDE_BUY, TRADE_QUANTITY, TRADE_SYMBOL)
                         if order_succeeded:
                             in_position = True
+
+class MA_Cross:
+    # in_position = False
+    # print("hello")
+    # # print(in_position)
+    # print(closes)
+    def __init__ (self, period1, period2):
+        self.PERIODshort = period1 
+        self.PERIODlong = period2
+    def run(self):
+        # print("hello")
+        # print(in_position)
+        np_closes = numpy.array(closes)
+        #This gets the moving average of the list of closes using the called upon period as the perid. It returns a list of the averages
+        MAshort = talib.SMA(np_closes, self.PERIODshort)
+        MAlong = talib.SMA(np_closes, self.PERIODlong)
+
+        if MAshort[-1] < MAlong[-1]:
+            print("REACHED SELL")
+
+#problem is occuring after this point
+            print(in_position)
+
+            if in_position:
+                print("sell")
+                # put binance SELL logic here
+                order_succeeded = order(SIDE_SELL, TRADE_QUANTITY, TRADE_SYMBOL)
+                if order_succeeded:
+                    in_position = False
+                    print ("SOLD")
+            else:
+                print("short BELOW long but you don't own it")
+                
+        if MAshort[-1] > MAlong[-1]:
+            print("REACHED BUY")
+
+#problem is occuring after this point
+            print(in_position)
+
+            if in_position:
+                print("short ABOVE long but you already own")
+            else:
+                print("buy")
+                # put binance BUY order logic here
+                order_succeeded = order(SIDE_BUY, TRADE_QUANTITY, TRADE_SYMBOL)
+                if order_succeeded:
+                    in_position = True
+                    print("BOUGHT")
+        
+        else: 
+            print(in_position)
+            print("WHY THE FUCK HERE")
 
 
 def order(side, quantity, symbol,order_type=ORDER_TYPE_MARKET):
@@ -70,6 +123,7 @@ def on_close(ws):
     print('closed connection')
 
 Strategy1 = RSI_Strategy(14,70,30)
+Strategy2 = MA_Cross(3,5)
 
 def on_message(ws, message):
     global closes, in_position
@@ -88,7 +142,7 @@ def on_message(ws, message):
         closes.append(float(close))
         print("closes: {closes}".format(closes = closes))
 
-    Strategy1.run()
-                
+    # Strategy1.run()
+    Strategy2.run()            
 ws = websocket.WebSocketApp(SOCKET, on_open=on_open, on_close=on_close, on_message=on_message)
 ws.run_forever()
