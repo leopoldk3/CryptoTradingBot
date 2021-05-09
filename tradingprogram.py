@@ -21,7 +21,9 @@ class RSI_Strategy:
         self.RSI_PERIOD = period
         self.RSI_OVERBOUGHT = overbought
         self.RSI_OVERSOLD = oversold
-    def run(self):   
+    def run(self):
+        global closes, in_position
+
         if len(closes) > self.RSI_PERIOD:
                 np_closes = numpy.array(closes)
                 rsi = talib.RSI(np_closes, self.RSI_PERIOD)
@@ -52,16 +54,12 @@ class RSI_Strategy:
                             in_position = True
 
 class MA_Cross:
-    # in_position = False
-    # print("hello")
-    # # print(in_position)
-    # print(closes)
     def __init__ (self, period1, period2):
         self.PERIODshort = period1 
         self.PERIODlong = period2
     def run(self):
-        # print("hello")
-        # print(in_position)
+        global closes, in_position
+
         np_closes = numpy.array(closes)
         #This gets the moving average of the list of closes using the called upon period as the perid. It returns a list of the averages
         MAshort = talib.SMA(np_closes, self.PERIODshort)
@@ -69,9 +67,6 @@ class MA_Cross:
 
         if MAshort[-1] < MAlong[-1]:
             print("REACHED SELL")
-
-#problem is occuring after this point
-            print(in_position)
 
             if in_position:
                 print("sell")
@@ -85,9 +80,6 @@ class MA_Cross:
                 
         if MAshort[-1] > MAlong[-1]:
             print("REACHED BUY")
-
-#problem is occuring after this point
-            print(in_position)
 
             if in_position:
                 print("short ABOVE long but you already own")
@@ -123,7 +115,7 @@ def on_close(ws):
     print('closed connection')
 
 Strategy1 = RSI_Strategy(14,70,30)
-Strategy2 = MA_Cross(3,5)
+Strategy2 = MA_Cross(50,200)
 
 def on_message(ws, message):
     global closes, in_position
