@@ -90,10 +90,6 @@ class MA_Cross:
                 if order_succeeded:
                     in_position = True
                     print("BOUGHT")
-        
-        else: 
-            print(in_position)
-            print("WHY THE FUCK HERE")
 
 
 def order(side, quantity, symbol,order_type=ORDER_TYPE_MARKET):
@@ -133,6 +129,7 @@ def on_message(ws, message):
         print("candle closed at {}".format(close))
         closes.append(float(close))
         print("closes: {closes}".format(closes = closes))
+        print("Number of closes:" + str(len(closes))
 
     # Strategy1.run()
     Strategy2.run()            
