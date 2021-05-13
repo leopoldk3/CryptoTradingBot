@@ -129,7 +129,7 @@ def on_message(ws, message):
         print("candle closed at {}".format(close))
         closes.append(float(close))
         print("closes: {closes}".format(closes = closes))
-        print("Number of closes:" + str(len(closes))
+        print("Number of closes:" + str(len(closes)))
 
     # Strategy1.run()
     Strategy2.run()            
