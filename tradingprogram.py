@@ -3,11 +3,13 @@ import config
 from binance.client import Client
 from binance.enums import *
 
+#type in currency ticker all caps and no spaces 
+trade_currency = input("Please enter currency you want to trade:")
+
 # candle sticks are every 1 min because at the end of the stream it is @kline_1m can change if wanted
+SOCKET = ("wss://stream.binance.com:9443/ws/{}usdt@kline_1m").format(trade_currency.lower())
 
-SOCKET = "wss://stream.binance.com:9443/ws/ethusdt@kline_1m"
-
-TRADE_SYMBOL = 'ETHUSD'
+TRADE_SYMBOL = '{}USD'.format(trade_currency)
 TRADE_QUANTITY = 0.05
 
 closes = []
@@ -15,6 +17,11 @@ in_position = False
 
 client = Client(config.API_KEY, config.API_SECRET, tld='us')
 
+
+class Scan:
+    def __init__(self):
+
+        pass
 
 class RSI_Strategy: 
     def __init__ (self, period, overbought, oversold):
@@ -91,7 +98,6 @@ class MA_Cross:
                     in_position = True
                     print("BOUGHT")
 
-
 def order(side, quantity, symbol,order_type=ORDER_TYPE_MARKET):
     try:
         print("sending order")
@@ -102,7 +108,6 @@ def order(side, quantity, symbol,order_type=ORDER_TYPE_MARKET):
         return False
 
     return True
-
     
 def on_open(ws):
     print('opened connection')

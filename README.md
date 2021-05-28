@@ -7,3 +7,6 @@ begin with
 
 create and activate virtual environment
 pip3 install -r requirements
+
+
+must have chromedriver for your chome version and os downloaded and in the same path directory 
