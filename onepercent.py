@@ -1,4 +1,4 @@
-import websocket, json, pprint, talib, numpy, datetime
+import websocket, json, pprint, talib, numpy, time
 import config, webscraping, tradingprogram
 from binance.client import Client
 from binance.enums import *
@@ -6,8 +6,17 @@ from binance.enums import *
 client = Client(config.API_KEY, config.API_SECRET, tld='us')
 percent = input("Please enter the percentage growth you want before selling. Just the number.")
 
-#strip this to only give the time
-time= datetime.now()
+#maybe make everything a function so at the end of the 6 hours it calls it again with reccursion and reevelutes everything? 
+
+
+#This sets the end time as 6 hours after first calling upon it 
+t_end = time.time() + 60 * 60 * 6
+print (time.time())
+print (t_end)
+
+while time.time() < t_end:
+    # do whatever you do
+    break 
 
 total_portfolio_values = [{'value': time}] 
 
