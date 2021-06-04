@@ -16,7 +16,8 @@ TRADE_QUANTITY = 0.05
 closes = []
 in_position = False
 
-client = Client(config.API_KEY, config.API_SECRET, tld='us')
+#commented out for safety so it doesn't trade on my account
+#client = Client(config.api_key, config.api_secret, tld='us')
 
 print(webscraping.get_top_five_gainers())
 
@@ -134,7 +135,7 @@ def on_message(ws, message):
         print("Number of closes:" + str(len(closes)))
 
     # Strategy1.run()
-    Strategy2.run()
+    #Strategy2.run()
     # print(webscraping.get_top_five_gainers())  don't put this here it reevaluates every second 
             
 ws = websocket.WebSocketApp(SOCKET, on_open=on_open, on_close=on_close, on_message=on_message)
